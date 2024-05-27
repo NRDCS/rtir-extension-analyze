@@ -1,0 +1,14 @@
+<%ARGS>
+$Ticket  => undef,
+$ARGSRef => {}
+@Actions => ()
+</%ARGS>
+<%INIT>
+use strict;
+use warnings;
+use RT::Filesender;
+
+return unless $ARGSRef->{analysis_service};
+
+RTIR::Extension::Analyze->AnalysisRequest($Ticket,$ARGSRef->{analysis_service});
+</%INIT>
