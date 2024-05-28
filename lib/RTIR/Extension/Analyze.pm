@@ -81,30 +81,28 @@ sub AnalysisRequest {
     my $Ticket = shift;
     my $AnalysisServiceName = shift;
     RT::Logger->debug("Analysis requested for ticket ".$Ticket->id.", service: ".$AnalysisServiceName);
+    # Skipping if not owner or other privileges not enough
     return (0, "Rights not sufficient for the analysis action") unless $Ticket->CurrentUserHasRight('ModifyTicket');
+    # Retrieving configuration
     my %AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
-    
-    use Data::Dumper;
-
     return (0, "Analysis services not configured") unless (exists $AnalysisServices{$AnalysisServiceName});
-
     my $api_url = $AnalysisServices{$AnalysisServiceName}->{'URL'};
     my $headers = $AnalysisServices{$AnalysisServiceName}->{'Headers'};
     my $skip_ssl = $AnalysisServices{$AnalysisServiceName}->{'SkipSSLVerification'} || 0;
     my $timeout = $AnalysisServices{$AnalysisServiceName}->{'Timeout'} || 3;
-
+    # Sending simple data to analysis service. containing only ticket id
+    # Assuming analysis service will retrieve data from ticket needed for analysis
     my %data = ( 
         ticket => $Ticket->id
     );
 
-
-
     my $client = build_http_client($skip_ssl, $timeout);
+
+    # setting up headers, e.g authorization
     foreach my $header (@{$headers}) {
-
         $client->default_header($header->{'Header'} => $header->{'Value'});
-
     }
+    # POSTing data
     my $response = $client->post(
         $api_url,
         Content      => encode_json(\%data),
