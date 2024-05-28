@@ -4,7 +4,8 @@ Set(%CSET_AnalysisServices,(
     Headers => [
       {Header => 'Authorization', Value => 'Token xyzxyz12345612346'}
     ],
-    SkipSSLVerification => 1
+    SkipSSLVerification => 1,
+    Timeout => 3
   }
 ));
 
