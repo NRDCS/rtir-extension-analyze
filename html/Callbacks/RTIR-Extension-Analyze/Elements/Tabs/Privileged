@@ -14,12 +14,8 @@ return unless $TicketObj->CurrentUserHasRight('ModifyTicket');
 
 # Adding analysis menu only on Incident ticket
 return unless RT::IR->IsIncidentQueue($TicketObj->QueueObj);
-# my $actions = PageMenu()->child("actions");
 
-$actions->child(
-    $TicketObj->QueueObj->Name => title => loc("Request File"),
-    path => $m->request_comp->path . "?id=" . $TicketObj->Id . "&request_file=1",
-);
+
 my %AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
 
 return unless (keys %AnalysisServices);
@@ -27,21 +23,12 @@ return unless (keys %AnalysisServices);
 # Creating Analysis request menu. 
 # Actions menu is sort order 95, Service Request - 90 so we add just before it
 my $analysis_menu = PageMenu()->child(
-    'nalysis', # unique identifier
+    'analysis', # unique identifier
     title => 'Analysis',
     sort_order => 85,
 );
 # Now add submenu for every analysis service, from configuration
 for my $Service ( keys %AnalysisServices ) {
-    # next unless $QueueObj->Load( $Queue );
-
-    # $analysis_menu->child(
-    #     $Queue => title => loc("[_1]", $QueueObj->Name),
-    #     path => "/Ticket/Create.html?Queue=" . $QueueObj->Id . "&".
-    #             ($Queue eq "Incidents"?"Child=":"new-MemberOf=") . 
-    #             $TicketObj->Id .  "&Subject=" . $TicketObj->Subject
-
-    # );
     $analysis_menu->child(
         $TicketObj->QueueObj->Name => title => loc($Service),
         path => $m->request_comp->path . "?id=" . $TicketObj->Id . "&analysis_service=".$Service,

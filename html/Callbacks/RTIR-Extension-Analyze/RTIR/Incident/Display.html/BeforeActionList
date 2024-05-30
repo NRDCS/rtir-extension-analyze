@@ -1,0 +1,16 @@
+<%ARGS>
+$Ticket  => undef,
+$ARGSRef => {}
+$Actions
+</%ARGS>
+<%INIT>
+use strict;
+use warnings;
+use RTIR::Extension::Analyze;
+
+return unless $ARGSRef->{analysis_service};
+
+my ($status, $result) = RTIR::Extension::Analyze->AnalysisRequest($Ticket,$ARGSRef->{analysis_service});
+RT::Logger->debug("Analysis output:".$result);
+push @$Actions, (($status==1)?"Analysis request submited: ":"Analysis request failed: ").$result;
+</%INIT>
