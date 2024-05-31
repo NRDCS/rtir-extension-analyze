@@ -84,12 +84,12 @@ sub AnalysisRequest {
     # Skipping if not owner or other privileges not enough
     return (0, "Rights not sufficient for the analysis action") unless $Ticket->CurrentUserHasRight('ModifyTicket');
     # Retrieving configuration
-    my %AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
-    return (0, "Analysis services not configured") unless (exists $AnalysisServices{$AnalysisServiceName});
-    my $api_url = $AnalysisServices{$AnalysisServiceName}->{'URL'};
-    my $headers = $AnalysisServices{$AnalysisServiceName}->{'Headers'};
-    my $skip_ssl = $AnalysisServices{$AnalysisServiceName}->{'SkipSSLVerification'} || 0;
-    my $timeout = $AnalysisServices{$AnalysisServiceName}->{'Timeout'} || 3;
+    my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
+    return (0, "Analysis services not configured") unless (exists $AnalysisServices->{$AnalysisServiceName});
+    my $api_url = $AnalysisServices->{$AnalysisServiceName}->{'URL'};
+    my $headers = $AnalysisServices->{$AnalysisServiceName}->{'Headers'};
+    my $skip_ssl = $AnalysisServices->{$AnalysisServiceName}->{'SkipSSLVerification'} || 0;
+    my $timeout = $AnalysisServices->{$AnalysisServiceName}->{'Timeout'} || 3;
     # Sending simple data to analysis service. containing only ticket id
     # Assuming analysis service will retrieve data from ticket needed for analysis
     my %data = ( 
