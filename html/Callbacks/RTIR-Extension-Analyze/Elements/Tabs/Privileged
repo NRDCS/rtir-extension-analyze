@@ -28,7 +28,6 @@ my $analysis_menu = PageMenu()->child(
 );
 # Now add submenu for every analysis service, from configuration
 for my $Service ( keys %{$AnalysisServices} ) {
-
     $analysis_menu->child(
         $Service,
         path => $m->request_comp->path . "?id=" . $TicketObj->Id . "&analysis_service=".$Service,
