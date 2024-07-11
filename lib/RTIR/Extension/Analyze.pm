@@ -6,20 +6,20 @@ our $VERSION = '0.01';
 
 =head1 NAME
 
-RTIR-Extension-Analyze - Menu and action to send CF values to analysis services
+RTIR-Extension-Analyze - Menu and action to send a request to analysis services
 
 =head1 DESCRIPTION
 
-Extension adds menu item Analyze on the Incident ticket menu. From there you can send 
-HTTP requests to external services (webhooks) sending together ticket ID as a context.
-External service supposed to retrieve CF values from the ticket and submit to analysis
-procedure.
+Extension adds menu item Analyze on the Incident or other queue ticket menu. 
+From there you can send HTTP requests to external services (webhooks) sending 
+together ticket ID as a context. External service (orchestrator) supposed to 
+retrieve CF values from the ticket and submit to analysis procedure. After 
+analysis is finished, orchestrator can update ticket with results, do 
+notification or any other action.
 
 =head1 RT VERSION
 
-Works with RT [What versions of RT is this known to work with?]
-
-[Make sure to use requires_rt and rt_too_new in Makefile.PL]
+Works with RT 5.0.5
 
 =head1 INSTALLATION
 
@@ -33,11 +33,13 @@ Works with RT [What versions of RT is this known to work with?]
 
 May need root permissions
 
-=item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
+=item Edit your F</opt/rt5/etc/RT_SiteConfig.pm>
 
 Add this line:
 
     Plugin('RTIR::Extension::Analyze');
+
+Add configuration, use file etc/RTIR-Extension-Analyze.pm as a template.
 
 =item Clear your mason cache
 
@@ -49,18 +51,15 @@ Add this line:
 
 =head1 AUTHOR
 
-Best Practical Solutions, LLC E<lt>modules@bestpractical.comE<gt>
+Marius Urkis, NRD CyberSecurity E<lt>cyberset@nrdcs.ltE<gt>
 
 =for html <p>All bugs should be reported via email to <a
-href="mailto:bug-RTIR-Extension-Analyze@rt.cpan.org">bug-RTIR-Extension-Analyze@rt.cpan.org</a>
-or via the web at <a
-href="http://rt.cpan.org/Public/Dist/Display.html?Name=RTIR-Extension-Analyze">rt.cpan.org</a>.</p>
+href="mailto:cybercet@nrdcs.lt">cybercet@nrdcs.lt</a>
+
 
 =for text
     All bugs should be reported via email to
-        bug-RTIR-Extension-Analyze@rt.cpan.org
-    or via the web at
-        http://rt.cpan.org/Public/Dist/Display.html?Name=RTIR-Extension-Analyze
+        cybercet@nrdcs.lt
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -84,7 +83,10 @@ sub AnalysisRequest {
     # Skipping if not owner or other privileges not enough
     return (0, "Rights not sufficient for the analysis action") unless $Ticket->CurrentUserHasRight('ModifyTicket');
     # Retrieving configuration
-    my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
+    my $queueName = $Ticket->QueueObj->Name();
+    return (0, "Analysis services not configured") unless RT->Config->Get('CSET_AnalysisServices')->{$queueName};
+
+    my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices')->{$queueName};
     return (0, "Analysis services not configured") unless (exists $AnalysisServices->{$AnalysisServiceName});
     my $api_url = $AnalysisServices->{$AnalysisServiceName}->{'URL'};
     my $headers = $AnalysisServices->{$AnalysisServiceName}->{'Headers'};
