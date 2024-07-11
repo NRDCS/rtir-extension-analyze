@@ -1,14 +1,16 @@
 NAME
-    RTIR-Extension-Analyze - [One line description of module's purpose here]
+    RTIR-Extension-Analyze - Menu and action to send a request to analysis service
 
 DESCRIPTION
-    [Why would someone install this extension? What does it do? What problem
-    does it solve?]
+    Extension adds menu item Analyze on the Incident or other queue ticket menu. 
+    From there you can send HTTP requests to external services (webhooks) sending 
+    together ticket ID as a context. External service (orchestrator) supposed to 
+    retrieve CF values from the ticket and submit to analysis procedure. After 
+    analysis is finished, orchestrator can update ticket with results, do 
+    notification or any other action.
 
 RT VERSION
-    Works with RT [What versions of RT is this known to work with?]
-
-    [Make sure to use requires_rt and rt_too_new in Makefile.PL]
+    Works with RT 5.0.5
 
 INSTALLATION
     perl Makefile.PL
@@ -16,23 +18,23 @@ INSTALLATION
     make install
         May need root permissions
 
-    Edit your /opt/rt4/etc/RT_SiteConfig.pm
+    Edit your /opt/rt5/etc/RT_SiteConfig.pm
         Add this line:
 
             Plugin('RTIR::Extension::Analyze');
+    Add configuration, use file etc/RTIR-Extension-Analyze.pm as a template.
 
     Clear your mason cache
-            rm -rf /opt/rt4/var/mason_data/obj
+            rm -rf /opt/rt5/var/mason_data/obj
 
     Restart your webserver
 
 AUTHOR
-    Best Practical Solutions, LLC <modules@bestpractical.com>
+    Marius Urkis, NRD CyberSecurity <cyberset@nrdcs.lt>
 
     All bugs should be reported via email to
-        bug-RTIR-Extension-Analyze@rt.cpan.org
-    or via the web at
-        http://rt.cpan.org/Public/Dist/Display.html?Name=RTIR-Extension-Analyze
+        cyberset@nrdcs.lt
+
 LICENSE AND COPYRIGHT
     This software is Copyright (c) 2024 by Marius Urkis
 

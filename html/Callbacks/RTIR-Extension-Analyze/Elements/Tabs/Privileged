@@ -5,6 +5,7 @@ my $TicketObj = RT::Ticket->new($session{CurrentUser});
 return unless (
         $m->request_comp->path =~ /RTIR\/Incident\/Display.html/
         || $m->request_comp->path =~ /RTIR\/Display.html/
+        | $m->request_comp->path =~ /Ticket\/Display.html/
     )
     && $DECODED_ARGS->{id}
     && $TicketObj->Load( $DECODED_ARGS->{id} );
@@ -12,10 +13,11 @@ return unless (
 # Adding analysis menu only for users with proper rights
 return unless $TicketObj->CurrentUserHasRight('ModifyTicket');
 
-# Adding analysis menu only on Incident ticket
-return unless RT::IR->IsIncidentQueue($TicketObj->QueueObj);
+# Adding analysis menu only for Queues in configuration
+my $queueName = $TicketObj->QueueObj->Name();
+return unless RT->Config->Get('CSET_AnalysisServices')->{$queueName};
 
-my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices');
+my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices')->{$queueName};
 
 return unless (keys %{$AnalysisServices});
 
