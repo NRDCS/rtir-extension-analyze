@@ -51,15 +51,15 @@ Add configuration, use file etc/RTIR-Extension-Analyze.pm as a template.
 
 =head1 AUTHOR
 
-Marius Urkis, NRD CyberSecurity E<lt>cyberset@nrdcs.ltE<gt>
+Marius Urkis, NRD Cyber Security E<lt>cyberset@nrdcs.ltE<gt>
 
 =for html <p>All bugs should be reported via email to <a
-href="mailto:cybercet@nrdcs.lt">cybercet@nrdcs.lt</a>
+href="mailto:cyberset@nrdcs.lt">cyberset@nrdcs.lt</a>
 
 
 =for text
     All bugs should be reported via email to
-        cybercet@nrdcs.lt
+        cyberset@nrdcs.lt
 
 =head1 LICENSE AND COPYRIGHT
 
