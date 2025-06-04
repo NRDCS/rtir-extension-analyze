@@ -15,7 +15,7 @@ return unless $TicketObj->CurrentUserHasRight('ModifyTicket');
 
 # Adding analysis menu only for Queues in configuration
 my $queueName = $TicketObj->QueueObj->Name();
-return unless RT->Config->Get('CSET_AnalysisServices')->{$queueName};
+return unless RT->Config->Get('CSET_AnalysisServices') && RT->Config->Get('CSET_AnalysisServices')->{$queueName};
 
 my $AnalysisServices = RT->Config->Get('CSET_AnalysisServices')->{$queueName};
 
